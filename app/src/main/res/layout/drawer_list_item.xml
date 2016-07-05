@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp" >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="1"
+        android:id="@+id/layout_item"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="?android:attr/actionBarSize"
+            android:text="Hãng xe"
+            android:paddingLeft="5dp"
+
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:id="@+id/txt_keyword" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:id="@+id/layout_spinner"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:weightSum="1">
+
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_weight="0.8"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingRight="20dp"
+                android:background="@android:color/transparent"
+                android:id="@+id/spinner" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/arrow_expand"
+                android:id="@+id/imageView8" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_search"
+            android:src="@drawable/search"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical|right"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/title_bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="bottom"
+        android:background="#d5d5d5">
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/title_top_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="top"
+        android:background="#d5d5d5">
+    </LinearLayout>
+</RelativeLayout>
