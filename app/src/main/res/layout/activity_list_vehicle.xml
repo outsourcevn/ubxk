@@ -75,4 +75,11 @@
         android:visibility="gone"
         android:layout_centerInParent="true"
         android:id="@+id/txt_no_result" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/spinner"
+        android:id="@+id/img_loading" />
 </RelativeLayout>

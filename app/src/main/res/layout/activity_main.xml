@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".UI.MainActivity">
+    tools:context="booking.online.bus.UI.MainActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -21,13 +21,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/passenger"
+            android:paddingRight="20dp"
+            android:textAllCaps="false"
+            android:paddingLeft="20dp"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
             android:id="@+id/btn_passenger" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/bus_owner"
+            android:paddingRight="20dp"
+            android:textAllCaps="false"
+            android:paddingLeft="20dp"
+            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/btn_bus_owner" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

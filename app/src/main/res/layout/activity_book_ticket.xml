@@ -19,7 +19,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -185,7 +186,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ĐẶT XE GỌI NGAY"
+            android:text="GỌI NGAY"
             android:layout_marginTop="40dp"
             android:textSize="20sp"
             android:textColor="@color/colorPrimary"
@@ -208,12 +209,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bấm vào số điện thoại để gọi xe"
+            android:text="Bấm vào số điện thoại để liên lạc"
             android:textColor="@color/black"
             android:textStyle="italic"
             android:layout_gravity="center_horizontal"
             android:id="@+id/textView4" />
+
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đặt xe"
+        android:textSize="18sp"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp"
+        android:id="@+id/btn_book_now" />
 
 </RelativeLayout>

@@ -143,6 +143,18 @@
             android:textAllCaps="false"
             android:layout_centerHorizontal="true"
             android:id="@+id/btn_search" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_search"
+            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:text="Đặt vé"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/btn_book_ticket" />
     </RelativeLayout>
 
 </RelativeLayout>
