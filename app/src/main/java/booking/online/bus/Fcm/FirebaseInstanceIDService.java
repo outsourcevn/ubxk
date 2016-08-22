@@ -1,6 +1,8 @@
 package booking.online.bus.Fcm;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -25,7 +27,12 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
         SharePreference preference = new SharePreference(this);
 
         preference.saveToken(Defines.token);
-        registerToken(token);
+        //registerToken(token);
+        final Intent intent = new Intent("tokenReceiver");
+        // You can also include some extra data.
+        final LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
+        intent.putExtra("token",token);
+        broadcastManager.sendBroadcast(intent);
     }
 
     private void registerToken(String token) {

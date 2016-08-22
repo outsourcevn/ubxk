@@ -1,42 +1,75 @@
 package booking.online.bus.UI;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import booking.online.bus.Controller.OwnerAdapter;
+import booking.online.bus.Models.OwnerCarObject;
 import booking.online.bus.R;
+import booking.online.bus.Utilities.BaseService;
 import booking.online.bus.Utilities.Defines;
+import booking.online.bus.Utilities.SharePreference;
 import booking.online.bus.Utilities.Utilites;
 
 public class RegisterOwnerActivity extends AppCompatActivity {
 
     private EditText edtStartRegister, edtOwnerRegister, edtDestinationRegister;
     private TextInputLayout edtStartRegisterHint, edtOwnerRegisterHint, edtDestinationRegisterHint;
-    private ImageView imgSelectStartRegister, imgOwnerRegister, imgDestinationRegister;
+    private ImageView imgOwnerRegister;
     private LinearLayout layoutRoute;
+    RelativeLayout root;
     private Context mContext;
     private Button btnLetsRegister;
-    private CharSequence[]          provinces, vehicles;
-
-
+    private ArrayList<OwnerCarObject> ownerCars ,ownerCarsFilter;
+    private ProgressDialog dialog;
+    private OwnerCarObject selected;
+    private SharePreference preference;
+    private ArrayList<String> provinceTo;
+    private ArrayList<String> provinceFrom;
+    private ArrayList<String> province;
+    private boolean isFilter = false;
+    private String proFrom="", proTo="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_owner);
         mContext = this;
+        preference = new SharePreference(this);
         initComponents();
     }
 
@@ -52,102 +85,354 @@ public class RegisterOwnerActivity extends AppCompatActivity {
         edtOwnerRegisterHint                =       (TextInputLayout)   findViewById(R.id.edt_owner_register_hint);
         edtDestinationRegisterHint          =       (TextInputLayout)   findViewById(R.id.edt_destination_register_hint);
 
-        imgSelectStartRegister              =       (ImageView)         findViewById(R.id.btn_spin_from_register);
         imgOwnerRegister                    =       (ImageView)         findViewById(R.id.btn_spin_owner_register);
-        imgDestinationRegister              =       (ImageView)         findViewById(R.id.btn_spin_destination_register);
 
         layoutRoute                         =       (LinearLayout)      findViewById(R.id.layout_route);
         btnLetsRegister                     =       (Button)            findViewById(R.id.btn_let_register);
         Toolbar toolbar                     =       (Toolbar)           findViewById(R.id.toolbar);
-
+        root                                =       (RelativeLayout)    findViewById(R.id.root);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Đăng ký xe hoạt động");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        provinces                   =       getResources().getStringArray(R.array.province_array);
-        vehicles                    =       getResources().getStringArray(R.array.vehicle_array);
-
-
-        imgSelectStartRegister.setOnClickListener(start_place_click_listener);
-        edtStartRegister.setOnClickListener(start_place_click_listener);
 
         edtOwnerRegister.setOnClickListener(register_owner_click_listener);
         imgOwnerRegister.setOnClickListener(register_owner_click_listener);
 
-        edtDestinationRegister.setOnClickListener(destination_register_click_listener);
-        imgDestinationRegister.setOnClickListener(destination_register_click_listener);
         btnLetsRegister.setOnClickListener(search_bus_listener);
+
+        getListOwnerCar();
+
+
     }
 
-    private View.OnClickListener start_place_click_listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Chọn địa điểm")
-                    .setSingleChoiceItems(provinces,-1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            edtStartRegister.setText(provinces[which]);
-                            dialog.dismiss();
-                            edtStartRegisterHint.setErrorEnabled(false);
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private void getListOwnerCar() {
+        ownerCars = new ArrayList<>();
+        if (Utilites.isOnline(mContext)) {
+            dialog = new ProgressDialog(this);
+            dialog.setMessage("Đang tải dữ liệu");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+            BaseService.getHttpClient().get(Defines.URL_LIST_OWNER, new AsyncHttpResponseHandler() {
 
-                            params.rightMargin  = (int) Utilites.convertDpToPixel(5, mContext);
-                            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                            params.addRule(RelativeLayout.CENTER_VERTICAL);
-                            imgSelectStartRegister.setLayoutParams(params);
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+                    // called when response HTTP status is "200 OK"
+                    Log.i("JSON", new String(responseBody));
+                    try {
+                        JSONArray arrayresult = new JSONArray(new String(responseBody));
+                        for (int i = 0; i < arrayresult.length(); i++) {
+                            JSONObject result = arrayresult.getJSONObject(i);
+                            int id = result.getInt("id");
+                            String name = result.getString("F13");
+                            String start = result.getString("F7");
+                            String end = result.getString("F8");
+                            String type = result.getString("F4");
+                            String provinceFrom = result.getString("F2");
+                            String provinceTo = result.getString("F3");
+                            OwnerCarObject object = new OwnerCarObject(id, name, start, end,type,provinceFrom, provinceTo);
+                            ownerCars.add(object);
+                        }
+
+                        // get all province
+                        province = new ArrayList<>();
+                        RequestParams params;
+                        params = new RequestParams();
+                        params.put("type", 1);
+                        BaseService.getHttpClient().post(Defines.URL_PROVINCE,params, new AsyncHttpResponseHandler() {
+
+                            @Override
+                            public void onStart() {
+
+                            }
+
+                            @Override
+                            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
+                                // called when response HTTP status is "200 OK"
+                                Log.i("JSON", new String(responseBody));
+                                try {
+                                    JSONArray arrayresult = new JSONArray(new String(responseBody));
+                                    for (int i = 0; i < arrayresult.length(); i++) {
+                                        JSONObject result = arrayresult.getJSONObject(i);
+                                        String name = result.getString("name");
+                                        province.add(name);
+                                    }
+                                    dialog.dismiss();
+                                    createArrayProvince();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
+                            }
+
+                            @Override
+                            public void onRetry(int retryNo) {
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
+                    Snackbar snackbar = Snackbar
+                            .make(root, "Không có kết nối mạng!", Snackbar.LENGTH_LONG)
+                            .setAction("Thử lại", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    getListOwnerCar();
+                                }
+                            });
+
+                    // Changing message text color
+                    snackbar.setActionTextColor(Color.RED);
+
+                    // Changing action button text color
+                    View sbView = snackbar.getView();
+                    TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.YELLOW);
+                    snackbar.show();
+                }
+
+                @Override
+                public void onRetry(int retryNo) {
+                }
+            });
+        }else{
+            Snackbar snackbar = Snackbar
+                    .make(root, "Không có kết nối mạng!", Snackbar.LENGTH_LONG)
+                    .setAction("Thử lại", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getListOwnerCar();
                         }
                     });
-            AlertDialog alert = builder.create();
-            alert.show();
+
+            // Changing message text color
+            snackbar.setActionTextColor(Color.RED);
+
+            // Changing action button text color
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.YELLOW);
+            snackbar.show();
         }
-    };
+    }
+
+    private void showSelectedDialog() {
+        final Dialog dialog = new Dialog(mContext,android.R.style.Theme_Light);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+        dialog.setContentView(R.layout.select_owner);
+
+        final ListView        listview        = (ListView)    dialog.findViewById(R.id.listView);
+        final ImageView       imgFilter       = (ImageView)   dialog.findViewById(R.id.img_filer);
+        final LinearLayout    layoutFilter    = (LinearLayout)dialog.findViewById(R.id.layout_filter);
+        final LinearLayout    layoutOption    = (LinearLayout)dialog.findViewById(R.id.layout_option);
+        final Spinner         spFrom          = (Spinner)     dialog.findViewById(R.id.spinner_from);
+        final Spinner         spTo            = (Spinner)     dialog.findViewById(R.id.spinner_to);
+        imgFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutFilter.performClick();
+            }
+        });
+        layoutFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFilter){
+                    layoutOption.setVisibility(View.VISIBLE);
+                    imgFilter.setImageResource(R.mipmap.province_cancel_filler);
+                    isFilter = true;
+                    spFrom.setSelection(0);
+                    spTo.setSelection(0);
+                }else{
+                    layoutOption.setVisibility(View.GONE);
+                    imgFilter.setImageResource(R.mipmap.province_filler);
+                    isFilter = false;
+                    spFrom.setSelection(0);
+                    spTo.setSelection(0);
+                }
+                OwnerAdapter adapter = new OwnerAdapter(mContext,ownerCars);
+                listview.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OwnerAdapter.onClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        edtOwnerRegister.setText(ownerCars.get(position).getOwnerName());
+                        edtStartRegister.setText(ownerCars.get(position).getStartPlace());
+                        edtDestinationRegister.setText(ownerCars.get(position).getEndPlace());
+                        preference.saveType(ownerCars.get(position).getType());
+                        dialog.dismiss();
+                        layoutRoute.setVisibility(View.VISIBLE);
+                        selected = ownerCars.get(position);
+                    }
+                });
+
+            }
+        });
+        ArrayAdapter<String> adapterFrom = new ArrayAdapter<>(mContext, R.layout.custom_spiner, provinceFrom);
+        adapterFrom.setDropDownViewResource(R.layout.simple_spnner);
+        spFrom.setAdapter(adapterFrom);
+        spFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ownerCarsFilter = new ArrayList<>();
+                ArrayList<OwnerCarObject> temp = new ArrayList<>();
+                if (position == 0) {
+                    proFrom = "";
+                    for (OwnerCarObject owner : ownerCars)
+                        temp.add(owner);
+                }else {
+                    proFrom = provinceFrom.get(position);
+                    for (OwnerCarObject owner : ownerCars)
+                        if (owner.getProvinceFrom().equals(proFrom))
+                            temp.add(owner);
+                }
+                if (!proTo.equals("")) {
+                    for (OwnerCarObject owner : temp)
+                        if (owner.getProvinceTo().equals(proTo))
+                            ownerCarsFilter.add(owner);
+                }else
+                    ownerCarsFilter = temp;
+                OwnerAdapter adapter = new OwnerAdapter(mContext,ownerCarsFilter);
+                listview.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OwnerAdapter.onClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        edtOwnerRegister.setText(ownerCarsFilter.get(position).getOwnerName());
+                        edtStartRegister.setText(ownerCarsFilter.get(position).getStartPlace());
+                        edtDestinationRegister.setText(ownerCarsFilter.get(position).getEndPlace());
+                        preference.saveType(ownerCarsFilter.get(position).getType());
+                        dialog.dismiss();
+                        layoutRoute.setVisibility(View.VISIBLE);
+                        selected = ownerCarsFilter.get(position);
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        ArrayAdapter<String> adapterTo = new ArrayAdapter<>(mContext, R.layout.custom_spiner, provinceTo);
+        adapterTo.setDropDownViewResource(R.layout.simple_spnner);
+        spTo.setAdapter(adapterTo);
+        spTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ownerCarsFilter = new ArrayList<>();
+                ArrayList<OwnerCarObject> temp = new ArrayList<>();
+                if (position == 0) {
+                    proTo = "";
+                    for (OwnerCarObject owner : ownerCars)
+                            temp.add(owner);
+                }else {
+                    proTo = provinceTo.get(position);
+                    for (OwnerCarObject owner : ownerCars)
+                        if (owner.getProvinceTo().equals(proTo))
+                            temp.add(owner);
+                }
+
+                if (!proFrom.equals("")) {
+                    for (OwnerCarObject owner : temp)
+                        if (owner.getProvinceFrom().equals(proFrom))
+                            ownerCarsFilter.add(owner);
+                }else
+                    ownerCarsFilter = temp;
+                OwnerAdapter adapter = new OwnerAdapter(mContext,ownerCarsFilter);
+                listview.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OwnerAdapter.onClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        edtOwnerRegister.setText(ownerCarsFilter.get(position).getOwnerName());
+                        edtStartRegister.setText(ownerCarsFilter.get(position).getStartPlace());
+                        edtDestinationRegister.setText(ownerCarsFilter.get(position).getEndPlace());
+                        preference.saveType(ownerCarsFilter.get(position).getType());
+                        dialog.dismiss();
+                        layoutRoute.setVisibility(View.VISIBLE);
+                        selected = ownerCarsFilter.get(position);
+                        isFilter = false;
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        OwnerAdapter adapter = new OwnerAdapter(mContext,ownerCars);
+        listview.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OwnerAdapter.onClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                edtOwnerRegister.setText(ownerCars.get(position).getOwnerName());
+                edtStartRegister.setText(ownerCars.get(position).getStartPlace());
+                edtDestinationRegister.setText(ownerCars.get(position).getEndPlace());
+                preference.saveType(ownerCars.get(position).getType());
+                dialog.dismiss();
+                layoutRoute.setVisibility(View.VISIBLE);
+                selected = ownerCars.get(position);
+                isFilter = false;
+            }
+        });
+        dialog.show();
+        dialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                isFilter = false;
+                dialog.dismiss();
+                return true;
+            }
+
+        });
+    }
+
+    private void LetsFilter(String fromPlace, String endPlace) {
+
+
+    }
 
 
     private View.OnClickListener register_owner_click_listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Chọn nhà xe")
-                    .setSingleChoiceItems(provinces,-1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            edtOwnerRegister.setText(provinces[which]);
-                            dialog.dismiss();
-                            edtOwnerRegisterHint.setErrorEnabled(false);
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (ownerCars.size()>0)
+                showSelectedDialog();
+            else{
+                Snackbar snackbar = Snackbar
+                        .make(root, "Không có kết nối mạng!", Snackbar.LENGTH_LONG)
+                        .setAction("Thử lại", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                getListOwnerCar();
+                            }
+                        });
 
-                            params.rightMargin  = (int) Utilites.convertDpToPixel(5, mContext);
-                            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                            params.addRule(RelativeLayout.CENTER_VERTICAL);
-                            imgOwnerRegister.setLayoutParams(params);
+                // Changing message text color
+                snackbar.setActionTextColor(Color.RED);
 
-                            layoutRoute.setVisibility(View.VISIBLE);
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
+                // Changing action button text color
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.YELLOW);
+                snackbar.show();
+            }
+
         }
     };
-
-
-    private View.OnClickListener destination_register_click_listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Chọn địa điểm")
-                    .setSingleChoiceItems(provinces,-1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            edtDestinationRegister.setText(provinces[which]);
-                            dialog.dismiss();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-    };
-
     private View.OnClickListener search_bus_listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -167,27 +452,16 @@ public class RegisterOwnerActivity extends AppCompatActivity {
 
             if (startPlace == null || startPlace.equals("")) {
                 edtStartRegisterHint.setError("Bạn chưa nhập điểm khởi hành");
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                params.rightMargin  = (int) Utilites.convertDpToPixel(5, mContext);
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                params.topMargin = (int) Utilites.convertDpToPixel(12, mContext);
-                imgSelectStartRegister.setLayoutParams(params);
                 return;
             }
             if (destinationPlace == null || destinationPlace.equals("")) {
                 edtDestinationRegisterHint.setError("Bạn chưa nhập điểm đến");
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                params.rightMargin  = (int) Utilites.convertDpToPixel(5, mContext);
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                params.topMargin = (int) Utilites.convertDpToPixel(12, mContext);
-                imgDestinationRegister.setLayoutParams(params);
                 return;
             }
             Intent intent = new Intent(mContext, RegisterActivity.class);
             //intent.putExtra(Defines.PROVINCE_FROM_ACTION, startPlace);
             //intent.putExtra(Defines.PROVINCE_TO_ACTION, destinationPlace);
+            intent.putExtra(Defines.OWNER_ID_ACTION, selected);
             startActivity(intent);
         }
     };
@@ -199,5 +473,33 @@ public class RegisterOwnerActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void createArrayProvince() {
+        // lấy các tỉnh thành đi
+        provinceFrom = new ArrayList<>();
+        provinceTo   = new ArrayList<>();
+        provinceFrom.add("Tất cả");
+        provinceFrom.add("Hà Nội");
+        provinceFrom.add("Sài Gòn");
+        provinceFrom.add("Đà Nẵng");
+        provinceFrom.add("Hải Phòng");
+
+        for (int i=0 ; i < province.size(); i++){
+            if (!province.get(i).equals("Hà Nội")&& !province.get(i).equals("Sài Gòn")&& !province.get(i).equals("Đà Nẵng")&& !province.get(i).equals("Hải Phòng")) {
+                provinceFrom.add(province.get(i));
+            }
+        }
+
+        provinceTo.add("Tất cả");
+        provinceTo.add("Hà Nội");
+        provinceTo.add("Sài Gòn");
+        provinceTo.add("Đà Nẵng");
+        provinceTo.add("Hải Phòng");
+
+        for (int i=0 ; i < province.size(); i++){
+            if (!province.get(i).equals("Hà Nội")&& !province.get(i).equals("Sài Gòn")&& !province.get(i).equals("Đà Nẵng")&& !province.get(i).equals("Hải Phòng")) {
+                provinceTo.add(province.get(i));
+            }
+        }
     }
 }

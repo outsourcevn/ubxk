@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="7dp"
+    android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:id="@+id/layout_content">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                app:popupTheme="@style/Theme.AppCompat.Light"
+                app:subtitleTextAppearance="@style/Card.Subtitle"
+                app:theme="@style/ToolbarCard"
+                android:layout_alignParentTop="true"
+                app:titleTextAppearance="@style/Card.Title" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:weightSum="1"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_title"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="0.2"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/img_call"
+                            android:src="@mipmap/pas_detail" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.8"
+                        android:weightSum="1"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="0.35"
+                                android:layout_height="wrap_content"
+                                android:text="Hành khách"
+                                android:layout_marginRight="10dp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:id="@+id/textView12" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="0.65"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="New Text"
+                                android:id="@+id/txt_name" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="0.35"
+                                android:layout_height="wrap_content"
+                                android:text="Số điện thoại"
+                                android:layout_marginRight="10dp"
+                                android:textColor="@color/black"
+                                android:id="@+id/textView14" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="0.65"
+                                android:layout_height="wrap_content"
+                                android:text="New Text"
+                                android:textColor="@color/black"
+                                android:id="@+id/txt_phone" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="0.35"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_marginRight="10dp"
+                                android:text="Ghi chú"
+                                android:id="@+id/textView16" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="0.65"
+                                android:textColor="@color/black"
+                                android:layout_height="wrap_content"
+                                android:text="New Text"
+                                android:id="@+id/txt_note" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/layout_confirm"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="* Bạn chưa xác nhận cho khách hàng"
+                        android:textColor="@color/red"
+                        android:id="@+id/textView13" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>

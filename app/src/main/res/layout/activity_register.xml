@@ -23,7 +23,8 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:id="@+id/linearLayout">
 
         <LinearLayout
             android:orientation="vertical"
@@ -50,7 +51,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:hint="Tài khoản"
+                        android:hint="Biển số xe"
+                        android:textColorHint="@color/blue"
                         android:focusable="true"
                         android:singleLine="true"
                         android:focusableInTouchMode="true"
@@ -76,6 +78,7 @@
                         android:ems="10"
                         android:hint="Mật khẩu"
                         android:focusable="true"
+                        android:textColorHint="@color/blue"
                         android:focusableInTouchMode="true"
                         android:inputType="textPassword"
                         android:id="@+id/edt_pass" />
@@ -97,9 +100,10 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Điện thoại"
+                        android:textColorHint="@color/blue"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:inputType="textPassword"
+                        android:inputType="phone"
                         android:id="@+id/edt_phone" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -128,5 +132,6 @@
         </LinearLayout>
 
     </LinearLayout>
+
 
 </RelativeLayout>

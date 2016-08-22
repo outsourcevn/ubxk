@@ -3,6 +3,7 @@ package booking.online.bus.UI;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +37,10 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +61,7 @@ public class ListVehicleActivity extends AppCompatActivity {
     private String provinceFrom , provinceTo, vehicleType;
     private TextView txtProvinceFrom, txtProvinceTo, txtNoResult;
     private MenuItem itemFilter;
+    private FloatingActionButton buttonFilter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,16 +169,21 @@ public class ListVehicleActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        vehicleView                 =   (RecyclerView)      findViewById(R.id.vehicle_view);
-        Toolbar toolbar             =   (Toolbar)           findViewById(R.id.toolbar);
-        mDrawerLayout               =   (DrawerLayout)      findViewById(R.id.drawer_layout);
-        mDrawerList                 =   (ListView)          findViewById(R.id.drawer);
-        txtProvinceFrom             =   (TextView)          findViewById(R.id.txt_province_from);
-        txtProvinceTo               =   (TextView)          findViewById(R.id.txt_province_to);
-        txtNoResult                 =   (TextView)          findViewById(R.id.txt_no_result);
-        imgLoading                  = (ImageView)           findViewById(R.id.img_loading);
+        vehicleView                 =   (RecyclerView)          findViewById(R.id.vehicle_view);
+        Toolbar toolbar             =   (Toolbar)               findViewById(R.id.toolbar);
+        mDrawerLayout               =   (DrawerLayout)          findViewById(R.id.drawer_layout);
+        mDrawerList                 =   (ListView)              findViewById(R.id.drawer);
+        txtProvinceFrom             =   (TextView)              findViewById(R.id.txt_province_from);
+        txtProvinceTo               =   (TextView)              findViewById(R.id.txt_province_to);
+        txtNoResult                 =   (TextView)              findViewById(R.id.txt_no_result);
+        imgLoading                  =   (ImageView)             findViewById(R.id.img_loading);
+        buttonFilter                =   (FloatingActionButton)  findViewById(R.id.btn_filter);
+
+
         AnimationDrawable frameAnimation = (AnimationDrawable) imgLoading.getBackground();
         frameAnimation.start();
+
+
         // set cardview
         vehicleView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -182,15 +194,33 @@ public class ListVehicleActivity extends AppCompatActivity {
             provinceTo      = extras.getString(Defines.PROVINCE_TO_ACTION);
             vehicleType     = extras.getString(Defines.VEHICLE_TYPE_ACTION);
         }
+
         txtProvinceFrom.setText(provinceFrom);
         txtProvinceTo.setText(provinceTo);
-        requestToGetListVehicle();
+        if (Utilites.isOnline(mContext))
+            requestToGetListVehicle();
+        else
+            showOffline();
 
         // set Actionbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Xe hoạt động");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        buttonFilter.setOnClickListener(filter_click_listener);
+    }
+    private View.OnClickListener filter_click_listener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+            //buttonFilter.setImageResource(R.drawable.filter);
+        }
+    };
+    private void showOffline() {
+        txtNoResult.setVisibility(View.VISIBLE);
+        imgLoading.setVisibility(View.GONE);
+        txtNoResult.setText("Không có kết nối mạng");
     }
 
     /*private void dummyData() {
@@ -243,8 +273,11 @@ public class ListVehicleActivity extends AppCompatActivity {
                         intent.putExtra(Defines.PROVINCE_TO_ACTION, provinceTo);
                         intent.putExtras(mBundle);
                         startActivity(intent);
+                        VehicleAdapter adapter = new VehicleAdapter(mContext,vehicles);
+                        vehicleView.setAdapter(adapter);
                     }
                 });
+
                 adapterDrawer = new NavDrawerListAdapter(mContext, navDrawerItems);
                 mDrawerList.setAdapter(adapterDrawer);
                 txtNoResult.setVisibility(View.GONE);
@@ -279,8 +312,6 @@ public class ListVehicleActivity extends AppCompatActivity {
 
                         isFilter = false;
                         itemFilter.setIcon(R.drawable.clear_filter);
-                        VehicleAdapter adapter = new VehicleAdapter(mContext,vehicles);
-                        vehicleView.setAdapter(adapter);
                         adapterDrawer = new NavDrawerListAdapter(mContext, navDrawerItems);
                         mDrawerList.setAdapter(adapterDrawer);
                         Defines.FilterInfor = new BusInfor();
@@ -295,6 +326,28 @@ public class ListVehicleActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        VehicleAdapter madapter = new VehicleAdapter(mContext,vehicles);
+        vehicleView.setAdapter(madapter);
+        madapter.setOnItemClickListener(new VehicleAdapter.onClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(mContext, BookTicketActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putSerializable(Defines.VEHICLE_PASS_ACTION, vehicles.get(position));
+                intent.putExtra(Defines.PROVINCE_FROM_ACTION, provinceFrom);
+                intent.putExtra(Defines.PROVINCE_TO_ACTION, provinceTo);
+                intent.putExtras(mBundle);
+
+                mContext.startActivity(intent);
+                VehicleAdapter adapter = new VehicleAdapter(mContext,vehicles);
+                vehicleView.setAdapter(adapter);
+            }
+        });
     }
 
     private void requestToGetListVehicle() {
@@ -322,21 +375,28 @@ public class ListVehicleActivity extends AppCompatActivity {
                         JSONObject jsonobject = data.getJSONObject(i);
                         parseJsonResult(jsonobject);
                     }
-                    VehicleAdapter adapter = new VehicleAdapter(mContext,vehicles);
-                    vehicleView.setAdapter(adapter);
-                    adapter.setOnItemClickListener(new VehicleAdapter.onClickListener() {
-                        @Override
-                        public void onItemClick(int position) {
-                            Intent intent = new Intent(mContext, BookTicketActivity.class);
-                            Bundle mBundle = new Bundle();
-                            mBundle.putSerializable(Defines.VEHICLE_PASS_ACTION, vehicles.get(position));
-                            intent.putExtra(Defines.PROVINCE_FROM_ACTION, provinceFrom);
-                            intent.putExtra(Defines.PROVINCE_TO_ACTION, provinceTo);
-                            intent.putExtras(mBundle);
+                    if(vehicles.size()>0) {
+                        VehicleAdapter adapter = new VehicleAdapter(mContext, vehicles);
+                        vehicleView.setAdapter(adapter);
+                        adapter.setOnItemClickListener(new VehicleAdapter.onClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                Intent intent = new Intent(mContext, BookTicketActivity.class);
+                                Bundle mBundle = new Bundle();
+                                mBundle.putSerializable(Defines.VEHICLE_PASS_ACTION, vehicles.get(position));
+                                intent.putExtra(Defines.PROVINCE_FROM_ACTION, provinceFrom);
+                                intent.putExtra(Defines.PROVINCE_TO_ACTION, provinceTo);
+                                intent.putExtras(mBundle);
 
-                            mContext.startActivity(intent);
-                        }
-                    });
+                                mContext.startActivity(intent);
+                                VehicleAdapter adapter = new VehicleAdapter(mContext, vehicles);
+                                vehicleView.setAdapter(adapter);
+                            }
+                        });
+                    }else{
+                        txtNoResult.setVisibility(View.VISIBLE);
+                        txtNoResult.setText("Không có xe nào cho tuyến này");
+                    }
                     prepareDataSliding();
                     imgLoading.setVisibility(View.GONE);
                 } catch (JSONException e) {
@@ -362,7 +422,7 @@ public class ListVehicleActivity extends AppCompatActivity {
 
     private void parseJsonResult(JSONObject jsonobject) {
         try {
-            int id              = jsonobject.getInt("id");
+            int id              = jsonobject.getInt("idtaixe");
             String from         = jsonobject.getString("F2");
             String to           = jsonobject.getString("F3");
           //String carPromote   = jsonobject.getString("F4");
@@ -374,17 +434,37 @@ public class ListVehicleActivity extends AppCompatActivity {
             String carOwner     = jsonobject.getString("F13");
             String telephone    = jsonobject.getString("F14");
             String startTime    = jsonobject.getString("F15");
+            String altTime      = jsonobject.getString("F16");
             int    price        = jsonobject.getInt("F17");
             String carPromote   = jsonobject.getString("F18");
             String note         = jsonobject.getString("F19");
+            String lastOnline   = jsonobject.getString("last_online");
+            DateTime lastDay    = new DateTime(lastOnline);
+            DateTime now        = new DateTime();
 
-            BusInfor busInfor = new BusInfor(id,carOwner,carPromote,fromPlace,toPlace,startTimeDay,startTime,recepType,vehicleType,price*1000,telephone,note);
-            vehicles.add(busInfor);
+            int days = Days.daysBetween(lastDay.withTimeAtStartOfDay(), now.withTimeAtStartOfDay()).getDays();
+            if (days <= 1) {
+                BusInfor busInfor = new BusInfor(id, carOwner, carPromote, fromPlace, toPlace, startTimeDay, startTime, altTime, recepType, vehicleType, price * 1000, telephone, note);
+                vehicles.add(busInfor);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            if (mDrawerLayout.isDrawerOpen(Gravity.LEFT))
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            else {
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 

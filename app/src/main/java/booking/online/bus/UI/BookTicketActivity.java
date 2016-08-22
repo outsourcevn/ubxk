@@ -1,18 +1,24 @@
 package booking.online.bus.UI;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -34,7 +40,8 @@ import booking.online.bus.Utilities.Utilites;
 
 public class BookTicketActivity extends AppCompatActivity {
     private BusInfor busBook;
-    private TextView txtAboutBus, txtOwnerBus, txtToPlace, txtFromPlace, txtTicketPrice, txtNote, txtTelephone;
+    private TextView txtAboutBus, txtOwnerBus, txtToPlace, txtFromPlace, txtTicketPrice, txtNote;
+    private LinearLayout layoutTelephone;
     private Context mContext;
     private String provinceFrom , provinceTo;
     private Button btnBookNow;
@@ -51,20 +58,20 @@ public class BookTicketActivity extends AppCompatActivity {
             provinceFrom    = extras.getString(Defines.PROVINCE_FROM_ACTION);
             provinceTo      = extras.getString(Defines.PROVINCE_TO_ACTION);
         }
+        Utilites.systemUiVisibility(this);
         initComponents();
     }
 
     private void initComponents() {
-        txtAboutBus             = (TextView) findViewById(R.id.txt_about_drive);
-        txtOwnerBus             = (TextView) findViewById(R.id.txt_owner_bus);
-        txtToPlace              = (TextView) findViewById(R.id.txt_to_place);
-        txtFromPlace            = (TextView) findViewById(R.id.txt_from_place);
-        txtTicketPrice          = (TextView) findViewById(R.id.txt_ticket_price);
-        txtNote                 = (TextView) findViewById(R.id.txt_note);
-        txtTelephone            = (TextView) findViewById(R.id.txt_telephone);
-        btnBookNow              = (Button)   findViewById(R.id.btn_book_now);
-        Toolbar toolbar         = (Toolbar)  findViewById(R.id.toolbar);
-
+        txtAboutBus             = (TextView)        findViewById(R.id.txt_about_drive);
+        txtOwnerBus             = (TextView)        findViewById(R.id.txt_owner_bus);
+        txtToPlace              = (TextView)        findViewById(R.id.txt_to_place);
+        txtFromPlace            = (TextView)        findViewById(R.id.txt_from_place);
+        txtTicketPrice          = (TextView)        findViewById(R.id.txt_ticket_price);
+        txtNote                 = (TextView)        findViewById(R.id.txt_note);
+        btnBookNow              = (Button)          findViewById(R.id.btn_book_now);
+        Toolbar toolbar         = (Toolbar)         findViewById(R.id.toolbar);
+        layoutTelephone         = (LinearLayout)    findViewById(R.id.layout_phone);
         // set Actionbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Đặt vé");
@@ -76,29 +83,55 @@ public class BookTicketActivity extends AppCompatActivity {
             txtFromPlace.setText(busBook.getFromPlace());
             txtToPlace.setText(busBook.getToPlace());
             txtNote.setText(busBook.getNote());
-            txtTelephone.setText(busBook.getTelephone());
+            //txtTelephone.setText(busBook.getTelephone());
             txtTicketPrice.setText(Utilites.convertCurrency(busBook.getPrice()));
-            txtTelephone.setOnClickListener(call_drive_listener);
+            //txtTelephone.setOnClickListener(call_drive_listener);
             btnBookNow.setOnClickListener(book_now_listener);
+            setTelePhone();
         }
 
 
 
     }
 
+    private void setTelePhone() {
+        String[] arrayPhone = busBook.getTelephone().split(";");
+        for (int i = 0 ; i < arrayPhone.length; i++){
+            LinearLayout layoutPhone = new LinearLayout(this);
+            layoutPhone.setBackgroundColor(getResources().getColor(R.color.red));
+            layoutPhone.setPadding((int)Utilites.convertDpToPixel(20,mContext),(int)Utilites.convertDpToPixel(10,mContext),(int)Utilites.convertDpToPixel(20,mContext),(int)Utilites.convertDpToPixel(10,mContext));
 
-    private View.OnClickListener call_drive_listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_CALL);
-
-            intent.setData(Uri.parse("tel:" + txtTelephone.getText()));
-            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                return;
+            TextView txtPhone = new TextView(this);
+            txtPhone.setText(arrayPhone[i]);
+            layoutPhone.addView(txtPhone);
+            txtPhone.setTextColor(getResources().getColor(R.color.yellow));
+            layoutTelephone.addView(layoutPhone);
+            if (i< arrayPhone.length-1) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.rightMargin = (int) Utilites.convertDpToPixel(20, mContext);
+                params.gravity = Gravity.CENTER;
+                layoutPhone.setLayoutParams(params);
             }
-            mContext.startActivity(intent);
+
+            setClickPhone(layoutPhone,txtPhone);
         }
-    };
+    }
+
+    private void setClickPhone(LinearLayout layoutPhone, final TextView txtPhone) {
+        layoutPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+
+                intent.setData(Uri.parse("tel:" + txtPhone.getText()));
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mContext.startActivity(intent);
+            }
+        });
+    }
+
     private View.OnClickListener book_now_listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -121,6 +154,5 @@ public class BookTicketActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }

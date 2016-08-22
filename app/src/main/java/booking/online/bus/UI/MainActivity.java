@@ -15,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import booking.online.bus.R;
 import booking.online.bus.Utilities.Defines;
 import booking.online.bus.Utilities.SharePreference;
+import booking.online.bus.Utilities.Utilites;
 
 public class MainActivity extends AppCompatActivity {
     private TextView txtIntroduce, txtContact;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initComponents();
     }
 
@@ -94,4 +96,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Utilites.systemUiVisibility(this);
+    }
 }

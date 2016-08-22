@@ -41,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="Điểm đi"
+                    android:textColorHint="@color/blue"
                     android:focusable="false"
                     android:cursorVisible="false"
                     android:singleLine="true"
@@ -78,6 +79,7 @@
                     android:ems="10"
                     android:hint="Điểm đến"
                     android:cursorVisible="false"
+                    android:textColorHint="@color/blue"
                     android:focusable="false"
                     android:singleLine="true"
                     android:focusableInTouchMode="true"
@@ -114,6 +116,7 @@
                     android:ems="10"
                     android:hint="Loại hình xe"
                     android:focusable="false"
+                    android:textColorHint="@color/blue"
                     android:cursorVisible="false"
                     android:singleLine="true"
                     android:focusableInTouchMode="true"
@@ -135,26 +138,29 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layout_vehicle_type"
+            android:layout_marginTop="20dp"
             android:background="@color/red"
             android:textColor="@color/white"
-            android:text="Tìm nhanh"
+            android:text="Tìm xe đang chạy"
             android:textSize="20sp"
             android:textAllCaps="false"
             android:layout_centerHorizontal="true"
+            android:layout_below="@id/btn_book_ticket"
             android:id="@+id/btn_search" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btn_search"
+            android:layout_below="@id/layout_vehicle_type"
             android:background="@color/blue"
             android:textColor="@color/white"
-            android:layout_marginTop="20dp"
+
             android:text="Đặt vé"
             android:textSize="20sp"
             android:textAllCaps="false"
             android:layout_centerHorizontal="true"
             android:id="@+id/btn_book_ticket" />
+
     </RelativeLayout>
 
 </RelativeLayout>

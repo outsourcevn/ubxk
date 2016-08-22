@@ -6,7 +6,17 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
     <color name="red">#d81f06</color>
+    <color name="yellow">#ffe92b</color>
     <color name="white">#ffffff</color>
     <color name="blue">#438eff</color>
-    <color name="grey">#e7e7e7</color>
+    <color name="grey">#dedede</color>
+    <color name="grey_blur">#f3f3f3</color>
+    <color name="bg">#dddddd</color>
+    <color name="green">#61ad3f</color>
+    <color name="blue_1">#aa5d5d5d</color>
+    <color name="blue_2">#aa414141</color>
+    <color name="md_red_600">#e53935</color>
+    <color name="md_red_400">#ef5350</color>
+    <color name="grey_1">#6d6d6d</color>
+    <color name="transparent">#00000000</color>
 </resources>

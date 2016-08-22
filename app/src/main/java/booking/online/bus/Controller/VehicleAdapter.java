@@ -40,7 +40,12 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.vehiclePromote.setText(vehicles.get(position).getCarPromote());
         holder.fromPlace.setText(vehicles.get(position).getFromPlace());
         holder.toPlace.setText(vehicles.get(position).getToPlace());
-        holder.startTime.setText(vehicles.get(position).getStartTime());
+        if (vehicles.get(position).getAltstartTime().equals("")) {
+            holder.startTime.setText(vehicles.get(position).getStartTime());
+        }else{
+            String[] arrayTime =  vehicles.get(position).getAltstartTime().split(",");
+            holder.startTime.setText(arrayTime[0]+"\n"+arrayTime[1]);
+        }
         holder.startTimeofDay.setText(vehicles.get(position).getStartTimeofDay());
         holder.vehicleType.setText(vehicles.get(position).getVehicleType());
         holder.price.setText(Utilites.convertCurrency(vehicles.get(position).getPrice()));

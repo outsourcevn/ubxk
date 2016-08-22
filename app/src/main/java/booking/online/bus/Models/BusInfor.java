@@ -13,13 +13,14 @@ public class BusInfor implements Serializable {
     private String toPlace;
     private String startTimeofDay;
     private String startTime;
+    private String altstartTime;
     private String recepType;
     private String vehicleType;
     private int    price;
     private String telephone;
     private String note;
 
-    public BusInfor(int id ,String carOwner, String carPromote, String fromPlace, String toPlace, String startTimeofDay, String startTime, String recepType, String vehicleType, int price,String telephone, String note) {
+    public BusInfor(int id ,String carOwner, String carPromote, String fromPlace, String toPlace, String startTimeofDay, String startTime,String altstartTime, String recepType, String vehicleType, int price,String telephone, String note) {
         this.id                 = id;
         this.carOwner           = carOwner;
         this.carPromote         = carPromote;
@@ -32,9 +33,18 @@ public class BusInfor implements Serializable {
         this.startTimeofDay     = startTimeofDay;
         this.telephone          = telephone;
         this.note               = note;
+        this.altstartTime       = altstartTime;
     }
 
     public BusInfor() {
+    }
+
+    public String getAltstartTime() {
+        return altstartTime;
+    }
+
+    public void setAltstartTime(String altstartTime) {
+        this.altstartTime = altstartTime;
     }
 
     public String getStartTimeofDay() {

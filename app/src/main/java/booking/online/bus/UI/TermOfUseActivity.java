@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.ScrollView;
 
+import booking.online.bus.Utilities.Utilites;
+
 public class TermOfUseActivity extends AppCompatActivity {
     private ScrollView ScrollTermOfUse;
     @Override
@@ -37,5 +39,10 @@ public class TermOfUseActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Utilites.systemUiVisibility(this);
     }
 }

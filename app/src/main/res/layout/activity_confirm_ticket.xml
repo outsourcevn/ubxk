@@ -76,6 +76,7 @@
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
                         android:singleLine="true"
+                        android:inputType="phone"
                         android:id="@+id/edt_confirm_phone" />
                 </android.support.design.widget.TextInputLayout>
                 <ImageView
@@ -99,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="Chú ý"
+                    android:hint="Ghi chú"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:singleLine="true"

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/bg">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -29,7 +30,9 @@
             android:layout_width="match_parent"
             android:id="@+id/layout_route"
             android:gravity="center"
-            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:weightSum="1"
             android:layout_height="wrap_content">
 
@@ -57,11 +60,20 @@
                 android:id="@+id/txt_province_to" />
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/grey"
             android:layout_below="@id/layout_route"
+            android:id="@+id/layout_route_shadow">
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@id/layout_route_shadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:id="@+id/vehicle_view"
             />
 
@@ -73,7 +85,7 @@
         android:text="Rất tiếc , không có xe nào thỏa mãn"
         android:textSize="18sp"
         android:visibility="gone"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:id="@+id/txt_no_result" />
 
     <ImageView
@@ -81,5 +93,16 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/spinner"
+        android:layout_gravity="center"
         android:id="@+id/img_loading" />
-</RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        app:layout_behavior="booking.online.bus.Controller.ScrollAwareFABBehavior"
+        android:src="@drawable/filter"
+        app:fabSize="normal"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:id="@+id/btn_filter"
+        android:layout_height="wrap_content" />
+</android.support.design.widget.CoordinatorLayout>

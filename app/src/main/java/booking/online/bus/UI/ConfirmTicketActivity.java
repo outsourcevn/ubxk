@@ -20,12 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -148,7 +145,7 @@ public class ConfirmTicketActivity extends AppCompatActivity {
         params.put("name", edtName.getText().toString());
         params.put("note", edtNote.getText().toString());
         params.put("uiid", Utilites.getTimeStamp());
-        params.put("id", busBook.getId());
+        params.put("idtaixe", busBook.getId());
         params.put("regid", preference.getToken());
         Log.i("params deleteDelivery", params.toString());
         BaseService.getHttpClient().post(Defines.URL_BOOK_TICKET, params, new AsyncHttpResponseHandler() {
@@ -192,7 +189,7 @@ public class ConfirmTicketActivity extends AppCompatActivity {
             {
                 new AlertDialog.Builder(mContext)
                         .setTitle("Thông báo")
-                        .setMessage("Đặt vé thành công")
+                        .setMessage("Đặt vé thành công. Đợi chủ xe xác nhận")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 finish();

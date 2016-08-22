@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import android.widget.ScrollView;
 
 import booking.online.bus.R;
+import booking.online.bus.Utilities.Utilites;
 
 public class ContactActivty extends AppCompatActivity {
     private ScrollView scrollContact;
@@ -39,5 +40,10 @@ public class ContactActivty extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Utilites.systemUiVisibility(this);
     }
 }
