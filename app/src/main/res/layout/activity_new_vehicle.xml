@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView2"
+        android:scrollbars="none"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/layout_title"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thông tin nhà xe"
+                        android:textSize="18sp"
+                        android:textColor="@color/md_blue_800"
+                        android:id="@+id/textView9" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Vui lòng điền đầy đủ và chính xác thông tin "
+                        android:textColor="@color/red"
+                        android:textSize="14sp"
+                        android:id="@+id/textView23" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_content"
+                android:layout_below="@id/layout_title"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:gravity="right"
+                    android:padding="15dp"
+                    android:background="@drawable/border_corner"
+                    android:layout_height="match_parent">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/layout_from_province">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tỉnh đi"
+                                android:textSize="13sp" />
+
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/txt_from_province" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền tỉnh xuất phát"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_from_province_error" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/layout_to_province">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tỉnh đến"
+                                android:textSize="13sp"
+                                android:id="@+id/txt_email" />
+
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:inputType="textEmailAddress"
+                                android:ems="10"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/txt_to_province" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền tỉnh đến"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_to_province_error" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:padding="5dp"
+                        android:id="@+id/layout_type">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Loại hình xe"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:textSize="16sp"
+                                android:singleLine="true"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/txt_type" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btn_get_type"
+                            android:layout_gravity="right|center_vertical"
+                            android:src="@drawable/btn_spin" />
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa chọn loại hình xe"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_type_error" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/layout_place_from">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Điểm đi"
+                                android:textSize="13sp"
+                                 />
+
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/txt_from_place" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền điểm đi"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_from_place_error" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/layout_to_place">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Điểm đến"
+                                android:textSize="13sp" />
+
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/txt_to_place" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền điểm đến"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_to_place_error" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:padding="5dp"
+                        android:id="@+id/layout_time">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Thời gian"
+                                android:textSize="13sp" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/edt_time" />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btn_get_time"
+                            android:layout_gravity="right|center_vertical"
+                            android:src="@drawable/btn_spin" />
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền thời gian xuất phát"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_time_error" />
+                    <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_corner"
+                    android:padding="5dp"
+                    android:id="@+id/layout_receive">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Đón trả"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:singleLine="true"
+                            android:textSize="16sp"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:id="@+id/edt_receive" />
+
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_get_receive"
+                        android:layout_gravity="right|center_vertical"
+                        android:src="@drawable/btn_spin" />
+                </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền kiểu đón trả"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_receive_error" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:padding="5dp"
+                        android:id="@+id/layout_vehicle_type">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Loại xe"
+                                android:textSize="13sp" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/edt_vehicle_type" />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btn_get_vehicle_type"
+                            android:layout_gravity="right|center_vertical"
+                            android:src="@drawable/btn_spin" />
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền loại xe"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_vehicle_type_error" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:padding="5dp"
+                        android:id="@+id/layout_name">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tên nhà xe"
+                                android:textSize="13sp" />
+                            <AutoCompleteTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:textSize="16sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/edt_name" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền tên nhà xe"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_name_error" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:padding="5dp"
+                        android:id="@+id/layout_phone">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Số điện thoại"
+                                android:textSize="13sp" />
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:singleLine="true"
+                                android:textSize="16sp"
+                                android:inputType="phone"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:id="@+id/edt_phone" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền số điện thoại"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_phone_error" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:padding="5dp"
+                        android:id="@+id/layout_price">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Giá vé"
+                                android:textSize="13sp" />
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@null"
+                                    android:singleLine="true"
+                                    android:textSize="16sp"
+                                    android:gravity="right"
+                                    android:inputType="phone"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:id="@+id/edt_price" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:text=".000 VNĐ"
+                                    android:id="@+id/textView22" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền giá vé"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_price_error" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:padding="5dp"
+                        android:id="@+id/layout_utilities">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tiện ích"
+                                android:textSize="13sp" />
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@null"
+                                    android:singleLine="true"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:id="@+id/edt_utilities" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bạn chưa điền các tiện ích của xe"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp"
+                        android:visibility="invisible"
+                        android:textColor="@color/md_red_700"
+                        android:id="@+id/txt_utilities_error" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_content"
+                android:background="@color/md_red_700"
+                android:textColor="@color/white"
+                android:text="Tạo nhà xe"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:id="@+id/btn_register" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

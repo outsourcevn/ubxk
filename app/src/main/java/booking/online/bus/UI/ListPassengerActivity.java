@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -189,6 +190,25 @@ public class ListPassengerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getCurrentLocation();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.intro_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == R.id.action_introduce) {
+            Intent intent = new Intent(mContext, TermOfUseActivity.class);
+            startActivity(intent);
+        }else   if (item.getItemId() == R.id.action_contact_me) {
+            Intent intent = new Intent(mContext, ContactActivty.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

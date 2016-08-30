@@ -81,9 +81,19 @@ public class SplashActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if(preference.getRole() == 2) {
+                            Intent intent = new Intent(SplashActivity.this, SearchActiveBusScreen.class);
+                            startActivity(intent);
+                            finish();
+                        }else if(preference.getRole() == 0){
+                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 }
             }, 2000);

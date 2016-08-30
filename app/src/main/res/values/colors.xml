@@ -19,4 +19,7 @@
     <color name="md_red_400">#ef5350</color>
     <color name="grey_1">#6d6d6d</color>
     <color name="transparent">#00000000</color>
+    <color name="md_blue_800">#1565c0</color>
+    <color name="md_red_700">#d32f2f</color>
+    <color name="md_grey_400">#bdbdbd</color>
 </resources>

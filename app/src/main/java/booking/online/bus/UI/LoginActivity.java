@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -67,8 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(login_click_listener);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Đăng nhập");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
     }
     private View.OnClickListener login_click_listener = new View.OnClickListener() {
@@ -208,10 +207,20 @@ public class LoginActivity extends AppCompatActivity {
     };
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.intro_menu, menu);
+        return true;
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // close this activity and return to preview activity (if there is any)
+        if (item.getItemId() == R.id.action_introduce) {
+            Intent intent = new Intent(mContext, TermOfUseActivity.class);
+            startActivity(intent);
+        }else   if (item.getItemId() == R.id.action_contact_me) {
+            Intent intent = new Intent(mContext, ContactActivty.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

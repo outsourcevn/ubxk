@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -242,8 +243,7 @@ public class SearchActiveBusScreen extends AppCompatActivity  implements GoogleA
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Tìm xe hoạt động");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         vehicles                    =       getResources().getStringArray(R.array.vehicle_array);
 
 
@@ -413,10 +413,20 @@ public class SearchActiveBusScreen extends AppCompatActivity  implements GoogleA
         }
     };
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.intro_menu, menu);
+        return true;
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // close this activity and return to preview activity (if there is any)
+        if (item.getItemId() == R.id.action_introduce) {
+            Intent intent = new Intent(mContext, TermOfUseActivity.class);
+            startActivity(intent);
+        }else   if (item.getItemId() == R.id.action_contact_me) {
+            Intent intent = new Intent(mContext, ContactActivty.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

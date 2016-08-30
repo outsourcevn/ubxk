@@ -22,6 +22,7 @@ public class SharePreference {
     private String DRIVER_ID = "driver id";
     private String OWNER_NAME = "owner name";
     private String TYPE = "type";
+    private String ROLE = "role";
     // constructor
     public SharePreference(Context activity) {
         this.activity = activity;
@@ -164,4 +165,15 @@ public class SharePreference {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
         return sp.getInt(DRIVER_ID,0);
     }
+    public void saveRole(int id) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(ROLE, id);
+        editor.apply();
+    }
+    public int getRole() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        return sp.getInt(ROLE,0);
+    }
+
 }

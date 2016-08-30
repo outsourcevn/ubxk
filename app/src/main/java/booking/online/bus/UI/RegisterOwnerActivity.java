@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -59,8 +60,6 @@ public class RegisterOwnerActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     private OwnerCarObject selected;
     private SharePreference preference;
-    private ArrayList<String> provinceTo;
-    private ArrayList<String> provinceFrom;
     private ArrayList<String> province;
     private boolean isFilter = false;
     private String proFrom="", proTo="";
@@ -234,12 +233,22 @@ public class RegisterOwnerActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
         dialog.setContentView(R.layout.select_owner);
 
-        final ListView        listview        = (ListView)    dialog.findViewById(R.id.listView);
-        final ImageView       imgFilter       = (ImageView)   dialog.findViewById(R.id.img_filer);
-        final LinearLayout    layoutFilter    = (LinearLayout)dialog.findViewById(R.id.layout_filter);
-        final LinearLayout    layoutOption    = (LinearLayout)dialog.findViewById(R.id.layout_option);
-        final Spinner         spFrom          = (Spinner)     dialog.findViewById(R.id.spinner_from);
-        final Spinner         spTo            = (Spinner)     dialog.findViewById(R.id.spinner_to);
+        final ListView              listview        = (ListView)                    dialog.findViewById(R.id.listView);
+        final ImageView             imgFilter       = (ImageView)                   dialog.findViewById(R.id.img_filer);
+        final LinearLayout          layoutFilter    = (LinearLayout)                dialog.findViewById(R.id.layout_filter);
+        final LinearLayout          layoutOption    = (LinearLayout)                dialog.findViewById(R.id.layout_option);
+        final Spinner               spFrom          = (Spinner)                     dialog.findViewById(R.id.spinner_from);
+        final Spinner               spTo            = (Spinner)                     dialog.findViewById(R.id.spinner_to);
+        final FloatingActionButton  imgAddVehicle   = (FloatingActionButton)        dialog.findViewById(R.id.img_new_vehicle);
+
+        imgAddVehicle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, NewVehicleActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
         imgFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,7 +288,7 @@ public class RegisterOwnerActivity extends AppCompatActivity {
 
             }
         });
-        ArrayAdapter<String> adapterFrom = new ArrayAdapter<>(mContext, R.layout.custom_spiner, provinceFrom);
+        ArrayAdapter<String> adapterFrom = new ArrayAdapter<>(mContext, R.layout.custom_spiner, Defines.provinceFrom);
         adapterFrom.setDropDownViewResource(R.layout.simple_spnner);
         spFrom.setAdapter(adapterFrom);
         spFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -292,7 +301,7 @@ public class RegisterOwnerActivity extends AppCompatActivity {
                     for (OwnerCarObject owner : ownerCars)
                         temp.add(owner);
                 }else {
-                    proFrom = provinceFrom.get(position);
+                    proFrom = Defines.provinceFrom.get(position);
                     for (OwnerCarObject owner : ownerCars)
                         if (owner.getProvinceFrom().equals(proFrom))
                             temp.add(owner);
@@ -325,7 +334,7 @@ public class RegisterOwnerActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> adapterTo = new ArrayAdapter<>(mContext, R.layout.custom_spiner, provinceTo);
+        ArrayAdapter<String> adapterTo = new ArrayAdapter<>(mContext, R.layout.custom_spiner, Defines.provinceTo);
         adapterTo.setDropDownViewResource(R.layout.simple_spnner);
         spTo.setAdapter(adapterTo);
         spTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -338,7 +347,7 @@ public class RegisterOwnerActivity extends AppCompatActivity {
                     for (OwnerCarObject owner : ownerCars)
                             temp.add(owner);
                 }else {
-                    proTo = provinceTo.get(position);
+                    proTo = Defines.provinceTo.get(position);
                     for (OwnerCarObject owner : ownerCars)
                         if (owner.getProvinceTo().equals(proTo))
                             temp.add(owner);
@@ -476,29 +485,29 @@ public class RegisterOwnerActivity extends AppCompatActivity {
     }
     private void createArrayProvince() {
         // lấy các tỉnh thành đi
-        provinceFrom = new ArrayList<>();
-        provinceTo   = new ArrayList<>();
-        provinceFrom.add("Tất cả");
-        provinceFrom.add("Hà Nội");
-        provinceFrom.add("Sài Gòn");
-        provinceFrom.add("Đà Nẵng");
-        provinceFrom.add("Hải Phòng");
+        Defines.provinceFrom = new ArrayList<>();
+        Defines.provinceTo   = new ArrayList<>();
+        Defines.provinceFrom.add("Tất cả");
+        Defines.provinceFrom.add("Hà Nội");
+        Defines.provinceFrom.add("Sài Gòn");
+        Defines.provinceFrom.add("Đà Nẵng");
+        Defines.provinceFrom.add("Hải Phòng");
 
         for (int i=0 ; i < province.size(); i++){
             if (!province.get(i).equals("Hà Nội")&& !province.get(i).equals("Sài Gòn")&& !province.get(i).equals("Đà Nẵng")&& !province.get(i).equals("Hải Phòng")) {
-                provinceFrom.add(province.get(i));
+                Defines.provinceFrom.add(province.get(i));
             }
         }
 
-        provinceTo.add("Tất cả");
-        provinceTo.add("Hà Nội");
-        provinceTo.add("Sài Gòn");
-        provinceTo.add("Đà Nẵng");
-        provinceTo.add("Hải Phòng");
+        Defines.provinceTo.add("Tất cả");
+        Defines.provinceTo.add("Hà Nội");
+        Defines.provinceTo.add("Sài Gòn");
+        Defines.provinceTo.add("Đà Nẵng");
+        Defines.provinceTo.add("Hải Phòng");
 
         for (int i=0 ; i < province.size(); i++){
             if (!province.get(i).equals("Hà Nội")&& !province.get(i).equals("Sài Gòn")&& !province.get(i).equals("Đà Nẵng")&& !province.get(i).equals("Hải Phòng")) {
-                provinceTo.add(province.get(i));
+                Defines.provinceTo.add(province.get(i));
             }
         }
     }

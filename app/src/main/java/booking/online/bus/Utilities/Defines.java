@@ -1,5 +1,7 @@
 package booking.online.bus.Utilities;
 
+import java.util.ArrayList;
+
 import booking.online.bus.Models.BusInfor;
 
 /**
@@ -16,6 +18,8 @@ public class Defines {
     public static  final String     URL_LOCATE                  = HOSTNAME + "Appi/locate";
     public static  final String     URL_ACCEPT                  = HOSTNAME + "Appi/accept";
     public static  final String     URL_PROVINCE                = HOSTNAME + "Appi/getfromto";
+    public static  final String     URL_NEW_VEHICLE             = HOSTNAME + "Appi/getauto";
+    public static  final String     URL_REGISTER_VEHICLE        = HOSTNAME + "Appi/newnhaxe";
 
 
     public static  final String     VEHICLE_PASS_ACTION         = "1";
@@ -31,5 +35,7 @@ public class Defines {
 
     public static  final int        LOOP_TIME                   = 5*60*1000;
 
+    public static ArrayList<String> provinceTo;
+    public static ArrayList<String> provinceFrom;
 
 }

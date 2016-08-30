@@ -18,14 +18,14 @@ import booking.online.bus.Utilities.SharePreference;
 import booking.online.bus.Utilities.Utilites;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView txtIntroduce, txtContact;
+    private TextView txtIntroduce;
     private Button btnPassenger, btnBusOwner;
     private SharePreference preference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        preference = new SharePreference(this);
         initComponents();
     }
 
@@ -35,17 +35,14 @@ public class MainActivity extends AppCompatActivity {
     */
     private void initComponents() {
         txtIntroduce            =       (TextView)      findViewById(R.id.txt_about_me);
-        txtContact              =       (TextView)      findViewById(R.id.txt_contact);
         btnPassenger            =       (Button)        findViewById(R.id.btn_passenger);
         btnBusOwner             =       (Button)        findViewById(R.id.btn_bus_owner);
 
 
         //set text about me
-        txtIntroduce.setText(Html.fromHtml(getString(R.string.about_me)));
-        txtContact.setText(Html.fromHtml(getString(R.string.contact_me)));
+        //txtIntroduce.setText(Html.fromHtml(getString(R.string.about_me)));
+       // txtContact.setText(Html.fromHtml(getString(R.string.contact_me)));
 
-        txtIntroduce.setOnClickListener(term_of_use_listener);
-        txtContact.setOnClickListener(contact_me_listener);
         btnPassenger.setOnClickListener(passenger_click_listener);
         btnBusOwner.setOnClickListener(bus_owner_click_listener);
 
@@ -58,13 +55,17 @@ public class MainActivity extends AppCompatActivity {
 
     /*
     Passenger click event
+       1: owner
+       2: passenger
     */
 
     private View.OnClickListener passenger_click_listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            preference.saveRole(2);
             Intent intent = new Intent(MainActivity.this, SearchActiveBusScreen.class);
             startActivity(intent);
+            finish();
         }
     };
 
@@ -75,8 +76,10 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener bus_owner_click_listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            preference.saveRole(1);
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
     };
 
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, ContactActivty.class);
             startActivity(intent);
+
         }
     };
 

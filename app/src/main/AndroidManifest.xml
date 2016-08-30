@@ -57,7 +57,9 @@
                 <action android:name="com.notification.deny" />
             </intent-filter>
         </receiver>
-        <activity android:name=".UI.ListPassengerActivity"></activity>
+
+        <activity android:name=".UI.ListPassengerActivity" />
+        <activity android:name=".UI.NewVehicleActivity"></activity>
     </application>
 
 </manifest>
