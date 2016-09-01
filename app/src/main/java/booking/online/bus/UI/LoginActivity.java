@@ -1,7 +1,9 @@
 package booking.online.bus.UI;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -221,8 +223,33 @@ public class LoginActivity extends AppCompatActivity {
         }else   if (item.getItemId() == R.id.action_contact_me) {
             Intent intent = new Intent(mContext, ContactActivty.class);
             startActivity(intent);
+        }else   if (item.getItemId() == R.id.switch_user) {
+            showDialogSwitchUser();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialogSwitchUser() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Thông báo")
+                .setMessage("Bạn có muốn chọn lại vai trò của mình?")
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        preference.saveRole(0);
+                        Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
     }
 }

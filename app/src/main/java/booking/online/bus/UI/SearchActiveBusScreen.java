@@ -45,6 +45,7 @@ import booking.online.bus.Models.OwnerCarObject;
 import booking.online.bus.R;
 import booking.online.bus.Utilities.BaseService;
 import booking.online.bus.Utilities.Defines;
+import booking.online.bus.Utilities.SharePreference;
 import booking.online.bus.Utilities.Utilites;
 import booking.online.bus.Widget.GPSTracker;
 
@@ -57,13 +58,15 @@ public class SearchActiveBusScreen extends AppCompatActivity  implements GoogleA
     private Button                  btnSearch, btnBookTicket;
     private CharSequence[]          CharProvinceFrom,CharProvinceTo, vehicles;
     private ArrayList<String>       provinceFrom, provinceTo;
-    private GoogleApiClient         googleApiClient;
+    //private GoogleApiClient         googleApiClient;
+    private SharePreference         preference;
     private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_active_bus_screen);
         mContext = this;
+        preference = new SharePreference(this);
         initComponents();
         getProvinceFromServer();
     }
@@ -427,9 +430,33 @@ public class SearchActiveBusScreen extends AppCompatActivity  implements GoogleA
         }else   if (item.getItemId() == R.id.action_contact_me) {
             Intent intent = new Intent(mContext, ContactActivty.class);
             startActivity(intent);
+        }else   if (item.getItemId() == R.id.switch_user) {
+            showDialogSwitchUser();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void showDialogSwitchUser() {
+        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+                .setTitle("Thông báo")
+                .setMessage("Bạn có muốn chọn lại vai trò của mình?")
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        preference.saveRole(0);
+                        Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
     }
    /* private void settingRequest() {
         if (googleApiClient == null) {

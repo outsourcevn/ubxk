@@ -252,7 +252,7 @@ public class NewVehicleActivity extends AppCompatActivity {
         RequestParams params;
         params = new RequestParams();
         params.put("f2", txtProvinceFrom.getText().toString());
-        params.put("f2",  txtProvinceTo.getText().toString());
+        params.put("f3",  txtProvinceTo.getText().toString());
         params.put("f4", txtType.getText().toString());
         params.put("f7", txtPlaceFrom.getText().toString());
         params.put("f8", txtPlaceTo.getText().toString());

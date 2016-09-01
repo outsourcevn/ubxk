@@ -13,4 +13,8 @@
         android:id="@+id/action_contact_me"
         android:title="Liên hệ"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/switch_user"
+        android:title="Chuyển người dùng"
+        app:showAsAction="never" />
 </menu>
