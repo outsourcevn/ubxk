@@ -374,14 +374,30 @@ public class SearchActiveBusScreen extends AppCompatActivity  implements GoogleA
                 });
                 builder.create().show();
             }else {
-                Intent intent = new Intent(mContext, QuickListVehicleActivity.class);
-                intent.putExtra(Defines.PROVINCE_FROM_ACTION, startPlace);
-                intent.putExtra(Defines.PROVINCE_TO_ACTION, destinationPlace);
-                intent.putExtra(Defines.VEHICLE_TYPE_ACTION, vehicleType);
-                startActivity(intent);
+                if (gps.handlePermissionsAndGetLocation()){
+                    Intent intent = new Intent(mContext, QuickListVehicleActivity.class);
+                    intent.putExtra(Defines.PROVINCE_FROM_ACTION,  edtStartPlace.getText().toString());
+                    intent.putExtra(Defines.PROVINCE_TO_ACTION, edtDestinationPlace.getText().toString());
+                    intent.putExtra(Defines.VEHICLE_TYPE_ACTION, edtVehicleType != null?edtVehicleType.getText().toString():"");
+                    startActivity(intent);
+                }
+
             }
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Defines.REQUEST_CODE_LOCATION_PERMISSIONS) {
+            Intent intent = new Intent(mContext, QuickListVehicleActivity.class);
+            intent.putExtra(Defines.PROVINCE_FROM_ACTION,  edtStartPlace.getText().toString());
+            intent.putExtra(Defines.PROVINCE_TO_ACTION, edtDestinationPlace.getText().toString());
+            intent.putExtra(Defines.VEHICLE_TYPE_ACTION, edtVehicleType != null?edtVehicleType.getText().toString():"");
+            startActivity(intent);
+        }
+    }
+
     private View.OnClickListener book_ticket_listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

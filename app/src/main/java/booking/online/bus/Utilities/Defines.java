@@ -22,6 +22,11 @@ public class Defines {
     public static  final String     URL_REGISTER_VEHICLE        = HOSTNAME + "Appi/newnhaxe";
 
 
+    public static  final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
+    public static  final int REQUEST_CODE_LOCATION_PERMISSIONS = 234;
+    public static  final int REQUEST_CODE_COARSE_LOCATION_PERMISSIONS = 345;
+
+
     public static  final String     VEHICLE_PASS_ACTION         = "1";
     public static  final String     PROVINCE_FROM_ACTION        = "2";
     public static  final String     PROVINCE_TO_ACTION          = "3";
@@ -37,5 +42,7 @@ public class Defines {
 
     public static ArrayList<String> provinceTo;
     public static ArrayList<String> provinceFrom;
+
+    public static boolean startThread = false;
 
 }

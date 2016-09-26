@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +22,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -39,7 +44,7 @@ import booking.online.bus.Widget.GPSTracker;
 import booking.online.bus.database.LocalVideoDataSource;
 import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 
-public class ListPassengerActivity extends AppCompatActivity {
+public class ListPassengerActivity extends AppCompatActivity implements  GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private double longitude , latitude;
     private SharePreference preference;
@@ -71,6 +76,7 @@ public class ListPassengerActivity extends AppCompatActivity {
             passengerView.setAdapter(adapter);
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("tokenReceiver"));
+        getCurrentLocation();
     }
     BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -104,11 +110,16 @@ public class ListPassengerActivity extends AppCompatActivity {
     };
     private void getCurrentLocation() {
         GPSTracker gps = new GPSTracker(this);
-        if (gps.canGetLocation()) {
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-            Thread t = new Thread(new locate());
-            t.start();
+        if (gps.canGetLocation()){
+            if (gps.handlePermissionsAndGetLocation()) {
+                latitude = gps.getLatitude();
+                longitude = gps.getLongitude();
+                if (!Defines.startThread) {
+                    Defines.startThread = true;
+                    Thread t = new Thread(new locate());
+                    t.start();
+                }
+            }
         }else{
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Thông báo");  // GPS not found
@@ -127,8 +138,25 @@ public class ListPassengerActivity extends AppCompatActivity {
             builder.create().show();
         }
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Defines.REQUEST_CODE_LOCATION_PERMISSIONS) {
+            if (!Defines.startThread) {
+                Defines.startThread = true;
+                Thread t = new Thread(new locate());
+                t.start();
+            }
+        }
+    }
     private void sendLocationToServer() {
+        GPSTracker gps = new GPSTracker(this);
+        if (gps.canGetLocation()){
+            if (gps.handlePermissionsAndGetLocation()) {
+                latitude = gps.getLatitude();
+                longitude = gps.getLongitude();
+            }
+        }
         RequestParams params;
         params = new RequestParams();
         params.put("from", preference.getPlaceFrom());
@@ -171,6 +199,21 @@ public class ListPassengerActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     private class locate implements Runnable {
         public void run() {
             try {
@@ -178,6 +221,7 @@ public class ListPassengerActivity extends AppCompatActivity {
                     Log.e("TAG","loop");
                     sendLocationToServer();
                     Thread.sleep(Defines.LOOP_TIME);
+
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -189,12 +233,12 @@ public class ListPassengerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getCurrentLocation();
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.intro_menu, menu);
+        getMenuInflater().inflate(R.menu.intro_menu_owner, menu);
         return true;
     }
     @Override

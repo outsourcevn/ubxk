@@ -1,6 +1,7 @@
 package booking.online.bus.Controller;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 
 import booking.online.bus.Models.ActiveBusModel;
 import booking.online.bus.R;
+import booking.online.bus.Utilities.Defines;
 
 /**
  * Created by DatNT on 6/28/2016.
@@ -28,10 +31,12 @@ public class ActiveVehicleAdapter extends RecyclerView.Adapter<ActiveVehicleAdap
     private ArrayList<ActiveBusModel> vehicles;
     private Context mContext;
     private onClickListener onClick;
-    public ActiveVehicleAdapter(Context mContext, ArrayList<ActiveBusModel> vehicles){
+
+    public ActiveVehicleAdapter(Context mContext, ArrayList<ActiveBusModel> vehicles) {
         this.vehicles = vehicles;
         this.mContext = mContext;
     }
+
     @Override
     public VehicleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.active_vehicle_detail, parent, false);
@@ -43,18 +48,27 @@ public class ActiveVehicleAdapter extends RecyclerView.Adapter<ActiveVehicleAdap
     public void onBindViewHolder(VehicleViewHolder holder, final int position) {
         holder.vehicleName.setText(vehicles.get(position).getName());
         DecimalFormat df = new DecimalFormat("#.#");
-        if ((int)vehicles.get(position).getDistance() ==0)
-            holder.distance.setText(df.format(vehicles.get(position).getDistance()*1000)+ " m");
+        if ((int) vehicles.get(position).getDistance() / 1000 == 0)
+            holder.distance.setText(df.format(vehicles.get(position).getDistance()) + " m");
         else
-            holder.distance.setText(df.format(vehicles.get(position).getDistance())+ " km");
+            holder.distance.setText(df.format(vehicles.get(position).getDistance() / 1000) + " km");
         holder.phone.setText(vehicles.get(position).getTelephone());
         holder.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("tag", "tag");
                 Intent intent = new Intent(Intent.ACTION_CALL);
 
                 intent.setData(Uri.parse("tel:" + vehicles.get(position).getTelephone()));
                 if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.CALL_PHONE}, Defines.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                     return;
                 }
                 mContext.startActivity(intent);

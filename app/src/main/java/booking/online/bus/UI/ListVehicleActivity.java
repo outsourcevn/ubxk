@@ -433,8 +433,17 @@ public class ListVehicleActivity extends AppCompatActivity {
             String vehicleType  = jsonobject.getString("F11");
             String carOwner     = jsonobject.getString("F13");
             String telephone    = jsonobject.getString("F14");
-            String startTime    = jsonobject.getString("F15");
-            String altTime      = jsonobject.getString("F16");
+            String startTime;
+            if (!jsonobject.getString("F15").equals("null"))
+                startTime= jsonobject.getString("F15");
+            else
+                startTime= "";
+
+            String altTime;
+            if (!jsonobject.getString("F16").equals("null"))
+                altTime= jsonobject.getString("F16");
+            else
+                altTime= "";
             int    price        = jsonobject.getInt("F17");
             String carPromote   = jsonobject.getString("F18");
             String note         = jsonobject.getString("F19");

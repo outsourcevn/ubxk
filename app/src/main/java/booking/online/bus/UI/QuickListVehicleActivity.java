@@ -1,11 +1,10 @@
 package booking.online.bus.UI;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.DrawerLayout;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,43 +12,33 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import booking.online.bus.Controller.ActiveVehicleAdapter;
-import booking.online.bus.Controller.FilterData;
-import booking.online.bus.Controller.NavDrawerListAdapter;
-import booking.online.bus.Controller.VehicleAdapter;
 import booking.online.bus.Models.ActiveBusModel;
-import booking.online.bus.Models.BusInfor;
-import booking.online.bus.Models.FilterObject;
+
 import booking.online.bus.R;
 import booking.online.bus.Utilities.BaseService;
 import booking.online.bus.Utilities.Defines;
 import booking.online.bus.Utilities.Utilites;
 import booking.online.bus.Widget.GPSTracker;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class QuickListVehicleActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class QuickListVehicleActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private RecyclerView vehicleView;
     private ArrayList<ActiveBusModel> vehicles;
     private Context mContext;
@@ -79,10 +68,15 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
         swipeToRefresh              =   (SwipeRefreshLayout)    findViewById(R.id.swipe_view);
 
         swipeToRefresh.setOnRefreshListener(this);
-        swipeToRefresh.setColorSchemeColors(Color.GRAY, Color.GREEN, Color.BLUE, Color.RED, Color.CYAN);
-        swipeToRefresh.setDistanceToTriggerSync(20);// in dips
-        swipeToRefresh.setSize(SwipeRefreshLayout.DEFAULT);// LARGE also can be used
 
+        swipeToRefresh.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeToRefresh.setRefreshing(true);
+                                        requestToGetListVehicle();
+                                    }
+                                }
+        );
         AnimationDrawable frameAnimation = (AnimationDrawable) imgLoading.getBackground();
         frameAnimation.start();
         Bundle extras = getIntent().getExtras();
@@ -113,11 +107,13 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
     }
 
     private void getCurrentLocation() {
-        GPSTracker gps = new GPSTracker(QuickListVehicleActivity.this);
+        GPSTracker gps = new GPSTracker(mContext);
+        // check if GPS enabled
         if (gps.canGetLocation()) {
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
         }
+
     }
     private void showOffline() {
         txtNoResult.setVisibility(View.VISIBLE);
@@ -167,9 +163,11 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
                     if(vehicles.size()>0) {
                         ActiveVehicleAdapter adapter = new ActiveVehicleAdapter(mContext, vehicles);
                         vehicleView.setAdapter(adapter);
+                        swipeToRefresh.setRefreshing(false);
                     }else{
                         txtNoResult.setVisibility(View.VISIBLE);
                         txtNoResult.setText("Không có xe nào cho tuyến này");
+                        swipeToRefresh.setRefreshing(false);
                     }
                     imgLoading.setVisibility(View.GONE);
                     swipeToRefresh.setRefreshing(false);
@@ -228,5 +226,20 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
     @Override
     public void onRefresh() {
         requestToGetListVehicle();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
