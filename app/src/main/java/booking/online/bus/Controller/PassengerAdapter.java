@@ -1,6 +1,7 @@
 package booking.online.bus.Controller;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -166,8 +168,11 @@ public class PassengerAdapter extends BaseAdapter implements StickyListHeadersAd
                 Intent intent = new Intent(Intent.ACTION_CALL);
 
                 intent.setData(Uri.parse("tel:" + passengers.get(position).getPhone()));
-                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+                if (Build.VERSION.SDK_INT >= 22) {
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.CALL_PHONE}, Defines.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        return;
+                    }
                 }
                 mContext.startActivity(intent);
             }

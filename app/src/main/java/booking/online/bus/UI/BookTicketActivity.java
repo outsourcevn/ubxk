@@ -124,8 +124,11 @@ public class BookTicketActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_CALL);
 
                 intent.setData(Uri.parse("tel:" + txtPhone.getText()));
-                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+                if (Build.VERSION.SDK_INT >= 22) {
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.CALL_PHONE}, Defines.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        return;
+                    }
                 }
                 mContext.startActivity(intent);
             }

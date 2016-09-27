@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
@@ -52,6 +53,8 @@ public class GPSTracker extends Service implements LocationListener {
 		getLocation();
 	}
 	public boolean handlePermissionsAndGetLocation() {
+		if (Build.VERSION.SDK_INT < 23)
+			return true;
 		int hasWriteContactsPermission = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION);
 		if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
 			ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Defines.REQUEST_CODE_LOCATION_PERMISSIONS);
