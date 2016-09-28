@@ -49,10 +49,10 @@ public class ActiveVehicleAdapter extends RecyclerView.Adapter<ActiveVehicleAdap
     public void onBindViewHolder(VehicleViewHolder holder, final int position) {
         holder.vehicleName.setText(vehicles.get(position).getName());
         DecimalFormat df = new DecimalFormat("#.#");
-        if ((int) vehicles.get(position).getDistance() / 1000 == 0)
-            holder.distance.setText(df.format(vehicles.get(position).getDistance()) + " m");
+        if ((int) vehicles.get(position).getDistance() == 0)
+            holder.distance.setText(df.format(vehicles.get(position).getDistance()*1000) + " m");
         else
-            holder.distance.setText(df.format(vehicles.get(position).getDistance() / 1000) + " km");
+            holder.distance.setText(df.format(vehicles.get(position).getDistance()) + " km");
         holder.phone.setText(vehicles.get(position).getTelephone());
         holder.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override

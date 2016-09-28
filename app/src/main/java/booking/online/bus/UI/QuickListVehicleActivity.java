@@ -3,6 +3,7 @@ package booking.online.bus.UI;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -38,7 +39,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class QuickListVehicleActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class QuickListVehicleActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private RecyclerView vehicleView;
     private ArrayList<ActiveBusModel> vehicles;
     private Context mContext;
@@ -66,17 +67,20 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
         txtNoResult                 =   (TextView)              findViewById(R.id.txt_no_result);
         imgLoading                  =   (ImageView)             findViewById(R.id.img_loading);
         swipeToRefresh              =   (SwipeRefreshLayout)    findViewById(R.id.swipe_view);
+        swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeToRefresh.setRefreshing(true);
+                (new Handler()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeToRefresh.setRefreshing(false);
+                        requestToGetListVehicle();
+                    }
+                }, 1000);
+            }
+        });
 
-        swipeToRefresh.setOnRefreshListener(this);
-
-        swipeToRefresh.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        swipeToRefresh.setRefreshing(true);
-                                        requestToGetListVehicle();
-                                    }
-                                }
-        );
         AnimationDrawable frameAnimation = (AnimationDrawable) imgLoading.getBackground();
         frameAnimation.start();
         Bundle extras = getIntent().getExtras();
@@ -142,7 +146,7 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
         params.put("lat", latitude);
         Log.i("params deleteDelivery", params.toString());
         vehicles = new ArrayList<>();
-        swipeToRefresh.setRefreshing(true);
+        //swipeToRefresh.setRefreshing(true);
         BaseService.getHttpClient().post(Defines.URL_LIST_ONL_VEHICLE, params, new AsyncHttpResponseHandler() {
 
             @Override
@@ -163,14 +167,14 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
                     if(vehicles.size()>0) {
                         ActiveVehicleAdapter adapter = new ActiveVehicleAdapter(mContext, vehicles);
                         vehicleView.setAdapter(adapter);
-                        swipeToRefresh.setRefreshing(false);
+                        //swipeToRefresh.setRefreshing(false);
                     }else{
                         txtNoResult.setVisibility(View.VISIBLE);
                         txtNoResult.setText("Không có xe nào cho tuyến này");
-                        swipeToRefresh.setRefreshing(false);
+                        //swipeToRefresh.setRefreshing(false);
                     }
                     imgLoading.setVisibility(View.GONE);
-                    swipeToRefresh.setRefreshing(false);
+                    //swipeToRefresh.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -209,8 +213,6 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -222,11 +224,6 @@ public class QuickListVehicleActivity extends AppCompatActivity implements Swipe
         return super.onKeyDown(keyCode, event);
     }
 
-
-    @Override
-    public void onRefresh() {
-        requestToGetListVehicle();
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
