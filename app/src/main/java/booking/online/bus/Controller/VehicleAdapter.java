@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,7 +50,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.startTimeofDay.setText(vehicles.get(position).getStartTimeofDay());
         holder.vehicleType.setText(vehicles.get(position).getVehicleType());
         holder.price.setText(Utilites.convertCurrency(vehicles.get(position).getPrice()));
-        holder.layoutContent.setOnClickListener(new View.OnClickListener() {
+        holder.btnBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onClick != null )
@@ -77,6 +78,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         TextView startTimeofDay;
         TextView vehicleType;
         TextView price;
+        ImageView btnBook;
         RelativeLayout layoutContent;
         VehicleViewHolder(View itemView) {
             super(itemView);
@@ -90,6 +92,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             startTimeofDay      = (TextView)        itemView.findViewById(R.id.txt_start_time_of_day);
             vehicleType         = (TextView)        itemView.findViewById(R.id.txt_vehicle_type);
             price               = (TextView)        itemView.findViewById(R.id.txt_price);
+            btnBook             = (ImageView)       itemView.findViewById(R.id.btn_book);
         }
 
     }

@@ -426,33 +426,68 @@ public class ListVehicleActivity extends AppCompatActivity {
             String from         = jsonobject.getString("F2");
             String to           = jsonobject.getString("F3");
           //String carPromote   = jsonobject.getString("F4");
-            String fromPlace    = jsonobject.getString("F7");
-            String toPlace      = jsonobject.getString("F8");
-            String startTimeDay = jsonobject.getString("F9");
-            String recepType    = jsonobject.getString("F10");
-            String vehicleType  = jsonobject.getString("F11");
-            String carOwner     = jsonobject.getString("F13");
-            String telephone    = jsonobject.getString("F14");
-            String startTime;
+
+
+            String fromPlace    = "";
+            if (!jsonobject.getString("F7").equals("null"))
+                fromPlace    = jsonobject.getString("F7");
+
+            String toPlace      = "";
+            if (!jsonobject.getString("F8").equals("null"))
+                toPlace      = jsonobject.getString("F8");
+
+            String startTimeDay = "";
+            if (!jsonobject.getString("F19").equals("null"))
+                startTimeDay = jsonobject.getString("F9");
+
+            String recepType    = "";
+            if (!jsonobject.getString("F10").equals("null"))
+                recepType    = jsonobject.getString("F10");
+
+            String vehicleType  = "";
+            if (!jsonobject.getString("F11").equals("null"))
+                vehicleType  = jsonobject.getString("F11");
+
+            String carOwner  = "";
+            if (!jsonobject.getString("F13").equals("null"))
+                carOwner     = jsonobject.getString("F13");
+
+
+            String telephone    = "";
+            if (!jsonobject.getString("F14").equals("null"))
+                telephone    = jsonobject.getString("F14");
+
+            String startTime ="";
             if (!jsonobject.getString("F15").equals("null"))
                 startTime= jsonobject.getString("F15");
-            else
-                startTime= "";
 
-            String altTime;
+            String altTime ="";
             if (!jsonobject.getString("F16").equals("null"))
                 altTime= jsonobject.getString("F16");
-            else
-                altTime= "";
-            int    price        = jsonobject.getInt("F17");
-            String carPromote   = jsonobject.getString("F18");
-            String note         = jsonobject.getString("F19");
-            String lastOnline   = jsonobject.getString("last_online");
-            DateTime lastDay    = new DateTime(lastOnline);
-            DateTime now        = new DateTime();
 
-            int days = Days.daysBetween(lastDay.withTimeAtStartOfDay(), now.withTimeAtStartOfDay()).getDays();
-            if (days <= 1) {
+            int price        = jsonobject.getInt("F17");
+
+
+            String carPromote ="";
+            if (!jsonobject.getString("F18").equals("null"))
+                carPromote   = jsonobject.getString("F18");
+
+            String note = "";
+            if (!jsonobject.getString("F19").equals("null"))
+                note         = jsonobject.getString("F19");
+
+            String lastOnline   = jsonobject.getString("last_online");
+            if (!lastOnline.equals("null")) {
+
+                DateTime lastDay = new DateTime(lastOnline);
+                DateTime now = new DateTime();
+
+                int days = Days.daysBetween(lastDay.withTimeAtStartOfDay(), now.withTimeAtStartOfDay()).getDays();
+                if (days <= 1) {
+                    BusInfor busInfor = new BusInfor(id, carOwner, carPromote, fromPlace, toPlace, startTimeDay, startTime, altTime, recepType, vehicleType, price * 1000, telephone, note);
+                    vehicles.add(busInfor);
+                }
+            }else{
                 BusInfor busInfor = new BusInfor(id, carOwner, carPromote, fromPlace, toPlace, startTimeDay, startTime, altTime, recepType, vehicleType, price * 1000, telephone, note);
                 vehicles.add(busInfor);
             }
